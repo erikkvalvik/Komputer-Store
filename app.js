@@ -16,6 +16,8 @@ const pcnameElement = document.getElementById("pcname");
 const pcdescriptionElement = document.getElementById("pcdescription");
 const pcpriceElement = document.getElementById("pcprice");
 const buybuttonElement = document.getElementById("buybutton");
+const purchaseSuccessElement = document.getElementById("purchase-successful");
+const purchaseFailedElement = document.getElementById("purchase-failed");
 
 let computers = [];
 let loaned = 0.0;
@@ -25,9 +27,11 @@ let hasLoan = false;
 balanceElement.innerText = bankBalance;
 payElement.innerText = pay;
 
-// Hides outstanding balance and repay loan button.
+// Hides outstanding balance and repay loan button and purchase messages.
 outstandingElement.style.display = "none"; //"block" to show again
 repaybuttonElement.style.display = "none";
+purchaseSuccessElement.style.display = "none";
+purchaseFailedElement.style.display = "none";
 
 //Gets computer objects from API
 fetch("https://noroff-komputer-store-api.herokuapp.com/computers")
@@ -69,8 +73,15 @@ workbuttonElement.addEventListener("click", handleWork);
 //Deposit pay - 10% of salary if outsdanding loan
 
 const handleDeposit = e => {
-    bankBalance += pay;
-    pay = pay - pay;
+    if(hasLoan){
+        loaned -= pay*0.1;
+        bankBalance += pay*0.9;
+    }
+    else{
+        bankBalance += pay;
+    }
+    pay = 0;
+    owedElement.innerText = loaned;
     balanceElement.innerText = bankBalance;
     payElement.innerText = pay;
     
@@ -115,3 +126,20 @@ const handleRepay = e => {
 }
 
 repaybuttonElement.addEventListener("click", handleRepay);
+
+// Buying a computer
+
+const handlePurchase = e => {
+    let price = parseInt(pcpriceElement.innerText);
+    if(price <= bankBalance){
+        bankBalance -= price;
+        purchaseFailedElement.style.display = "none";
+        purchaseSuccessElement.style.display = "block";
+        balanceElement.innerText = bankBalance;
+    }else{
+        purchaseSuccessElement.style.display = "none";
+        purchaseFailedElement.style.display = "block";
+    }
+}
+
+buybuttonElement.addEventListener("click", handlePurchase);
