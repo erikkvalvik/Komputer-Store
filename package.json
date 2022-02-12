@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/erikkvalvik/Assignment4/issues"
   },
-  "homepage": "https://github.com/erikkvalvik/Assignment4#readme"
+  "homepage": "https://github.com/erikkvalvik/Assignment4#readme",
+  "dependencies": {
+    "node-sass": "^7.0.1"
+  }
 }

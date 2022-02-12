@@ -1,0 +1,9 @@
+body{
+    display: flex;
+    flex-direction: row;
+}
+.bank{
+    display: flex;
+    flex-direction: row;
+    
+}
