@@ -32,3 +32,5 @@ How the app works:
  - Purchase history:
     - A *Purchase history* element that shows up after a successful purchase, displaying information about the previously purchased computers(PC name and price).
     - Reduce stock after successful purchase. Not allowing for purchase of *Out of stock* items.
+
+**The image for "The Visor" does not show up on the website. This is because the returned url is for a .jpg file, while the actual image is a .png file."**
