@@ -1,9 +1,50 @@
-body{
+    body{
+        display: flex;
+        flex-direction: column;
+    }
+    .top-container{
+        margin: 25px;
+        /* padding-left: 10rem;
+        padding-right: 10rem; */
+        display: flex;
+        flex-direction: row;
+    
+    }
+
+.bank{
+    margin: 0px 2.5rem 0px 2.5rem;
+    width: 33%;
+    border: 1px solid red;
     display: flex;
     flex-direction: row;
 }
-.bank{
-    display: flex;
-    flex-direction: row;
+button{
+    height: 50px;
+    border-radius: 8px;
+    border: none;
+    width: 100px;
+}
+#loanbutton{
+    width: 150px;
+}
+
+.work{
+    margin: 0px 2.5rem 0px 2.5rem;
+    width: 33%;
+    border: 1px solid red;
+}
+.store{
+    margin: 0px 2.5rem 0px 2.5rem;
+    width: 33%;
+    border: 1px solid red;
+}
+.image{
+    width: 128px;
+    height: 128px;
     
+}
+
+select{
+    height: 35px;
+    padding: 0 5px 0 5px;
 }

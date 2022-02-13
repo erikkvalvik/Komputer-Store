@@ -18,6 +18,9 @@ const pcpriceElement = document.getElementById("pcprice");
 const buybuttonElement = document.getElementById("buybutton");
 const purchaseSuccessElement = document.getElementById("purchase-successful");
 const purchaseFailedElement = document.getElementById("purchase-failed");
+const computerSpecsElement = document.getElementById("specs");
+const computerImgElement = document.getElementById("computerImg");
+const stockElement = document.getElementById("stock");
 
 let computers = [];
 let loaned = 0.0;
@@ -37,13 +40,28 @@ purchaseFailedElement.style.display = "none";
 fetch("https://noroff-komputer-store-api.herokuapp.com/computers")
     .then(response => response.json())
     .then(data => computers = data)
-    .then(computers => addComputersToMenu(computers));
+    .then(computers => addComputersToMenu(computers))
+    .catch(err => console.log(err));
 
 
 //Adds computers to drop-down menu using computers array
 const addComputersToMenu = (computers) => {
     computers.forEach(pc => addComputerToMenu(pc));
     pcpriceElement.innerText = computers[0].price;
+    pcnameElement.innerText = computers[0].title;
+    pcdescriptionElement.innerText = computers[0].description;
+    for(i = 0; i < computers[0].specs.length; i++){
+        let specParagraph = document.createElement("p");
+        specParagraph.innerText = computers[0].specs[i];
+        computerSpecsElement.appendChild(specParagraph);
+    }
+    computerImgElement.src = "https://noroff-komputer-store-api.herokuapp.com/"+computers[0].image;
+    stockElement.innerText = computers[0].stock + " in stock.";
+    if(parseInt(computers[0].stock) < 15){
+        stockElement.style.color = "yellow";
+    }else{
+        stockElement.style.color = "green";
+    }
 }
 
 const addComputerToMenu = (computer) => {
@@ -57,6 +75,23 @@ const addComputerToMenu = (computer) => {
 const handlePCSelectChange = e => {
     const selectedComputer = computers[e.target.selectedIndex];
     pcpriceElement.innerText = selectedComputer.price;
+    pcnameElement.innerText = selectedComputer.title;
+    pcdescriptionElement.innerText = selectedComputer.description;
+    //Resets specs
+    computerSpecsElement.innerHTML = '';
+    for(i = 0; i < selectedComputer.specs.length; i++){
+        let specParagraph = document.createElement("p");
+        specParagraph.innerText = selectedComputer.specs[i];
+        computerSpecsElement.appendChild(specParagraph);
+    }
+    computerImgElement.src = 'https://noroff-komputer-store-api.herokuapp.com/' + selectedComputer.image;
+    stockElement.innerText = selectedComputer.stock + " in stock.";
+    if(parseInt(selectedComputer.stock) < 15){
+        stockElement.style.color = "yellow";
+    }else{
+        stockElement.style.color = "green";
+    }
+    
 }
 
 pcselectElement.addEventListener("change", handlePCSelectChange);
@@ -92,7 +127,11 @@ bankbuttonElement.addEventListener("click", handleDeposit);
 // Getting a loan
 const handleLoanBtn = e => {
     if(bankBalance > 0 && !hasLoan){
-        loaned = bankBalance*2;
+        let amount = (function ask(){
+            var n = parseInt(window.prompt("Thank you for choosing the Lone Shark bank! \nHow much would you like to loan? \nOur interests are the best, because they are the highest!"));
+            return isNaN(n) || +n > bankBalance*2 || +n < 1 ? ask() : n;
+        }());
+        loaned = parseInt(amount);
         bankBalance += loaned;
         owedElement.innerText = loaned;
         outstandingElement.style.display = "block";
