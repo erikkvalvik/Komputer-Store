@@ -109,8 +109,16 @@ workbuttonElement.addEventListener("click", handleWork);
 
 const handleDeposit = e => {
     if(hasLoan){
-        loaned -= pay*0.1;
-        bankBalance += pay*0.9;
+        if(pay*0.1 > loaned){
+            let interest = pay*0.1;
+            interest -= loaned;
+            loaned = 0;
+            bankBalance += pay*0.9 + interest;
+            hasLoan = false;
+        }else{
+            loaned -= pay*0.1;
+            bankBalance += pay*0.9;
+        }
     }
     else{
         bankBalance += pay;
@@ -128,13 +136,17 @@ bankbuttonElement.addEventListener("click", handleDeposit);
 const handleLoanBtn = e => {
     if(bankBalance > 0 && !hasLoan){
         let amount = (function ask(){
-            var n = parseInt(window.prompt("Thank you for choosing the Lone Shark bank! \nHow much would you like to loan? \nOur interests are the best, because they are the highest!"));
+            let m = window.prompt("Thank you for choosing the Lone Shark bank! \nHow much would you like to loan? \nOur interests are the best, because they are the highest!");
+            if(m == "null" || m == null || m == "") return 0;
+            let n = parseInt(m);
             return isNaN(n) || +n > bankBalance*2 || +n < 1 ? ask() : n;
         }());
+        if(amount == 0) return;
         loaned = parseInt(amount);
         bankBalance += loaned;
         owedElement.innerText = loaned;
-        outstandingElement.style.display = "block";
+        outstandingElement.style.display = "flex";
+        outstandingElement.style.flexDirection = "row";
         repaybuttonElement.style.display = "block";
         balanceElement.innerText = bankBalance;
         hasLoan = true;
@@ -153,7 +165,7 @@ const handleRepay = e => {
     }
     else{
         loaned -= pay;
-        pay -= 0;
+        pay -= pay;
     }
     payElement.innerText = pay;
     owedElement.innerText = loaned;
